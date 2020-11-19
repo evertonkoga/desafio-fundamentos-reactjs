@@ -37,7 +37,12 @@ const Dashboard: React.FC = () => {
     async function loadTransactions(): Promise<void> {
       const response = await api.get('transactions');
 
-      const transactionsFormatted = response.data.transactions.map(
+      const {
+        balance: balanceResponse,
+        transactions: transactionsResponse,
+      } = response.data;
+
+      const transactionsFormatted = transactionsResponse.map(
         (transaction: Transaction) => ({
           ...transaction,
           formattedValue: `${transaction.type === 'outcome' ? '- ' : ''}${formatValue(transaction.value)}`,
@@ -48,9 +53,9 @@ const Dashboard: React.FC = () => {
       );
 
       const balanceFormatted = {
-        income: formatValue(response.data.balance.income),
-        outcome: formatValue(response.data.balance.outcome),
-        total: formatValue(response.data.balance.total),
+        income: formatValue(balanceResponse.income),
+        outcome: formatValue(balanceResponse.outcome),
+        total: formatValue(balanceResponse.total),
       };
 
       setBalance(balanceFormatted);
